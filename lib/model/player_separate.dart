@@ -1,18 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-class PlayerSeparate {
+class PlayerSeparate with ChangeNotifier {
   final player = AudioPlayer();
   late var durationn = '';
 
-  void open(int source) {
-    // player.setAsset(musicList[source]['trackDetails']['source']);
+  void open(String source) async {
+    await player.setUrl(source);
     player.play();
-
-    //------------------------------
-    // player.open(
-    //   Audio(musicList[source]['trackDetails']['source']),
-    //   autoStart: true,
-    //   showNotification: true,
-    // );
   }
 }

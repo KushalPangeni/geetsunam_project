@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:geetsunam/const.dart';
-import 'package:geetsunam/model/genres.dart';
-import 'package:http/http.dart' as http;
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
+
+import '../controller/fetch_provider.dart';
 
 class GenrePage extends StatefulWidget {
   const GenrePage({
@@ -18,65 +16,69 @@ class GenrePage extends StatefulWidget {
 }
 
 class _GenrePageState extends State<GenrePage> {
-  List genres = [];
-  Future<List<Genre>?> getGenres() async {
-    var client = http.Client();
-    var uri = Uri.parse('https://geetsunam-node.onrender.com/api/genre');
-    var response =
-        await client.get(uri, headers: {'Authorization': 'Bearer $token'});
-    Map<String, dynamic> res = json.decode(response.body);
-    setState(() {
-      genres = res['data']['genres'];
-    });
-    log(response.body.toString());
-    return null;
-  }
-
   @override
   void initState() {
     super.initState();
-    getGenres();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Genres",
-            style: TextStyle(fontSize: 24),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: genres.length,
-              itemBuilder: (context, index) => SizedBox(
-                height: 100,
-                width: 100,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 80,
-                      child: Image(
-                        image: NetworkImage(genres[index]['image']),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Text(genres[index]['name']),
-                  ],
+    // final fetchProvider = Provider.of<FetchData>(context, listen: false);
+    // log(fetchProvider.genres.toString());
+    return Consumer<FetchData>(
+      builder: (context, value, child) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Genres",
+                style: TextStyle(fontSize: 24),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Visibility(
+                visible: value.isGenresLoaded,
+                replacement: Center(child: CircularProgressIndicator()),
+                child: SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: value.genre.data?.genres.length,
+                      itemBuilder: (context, index) {
+                        var model = value.genre.data?.genres[index];
+                        return SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Card(
+                            child: Column(
+                              children: [
+                                CachedNetworkImage(
+                                  height: 76,
+                                  fit: BoxFit.fill,
+                                  imageUrl: model?.image ?? "",
+                                  //need to put some url
+                                  // imageUrl: _.genreModel.data.genres,
+                                  placeholder: (context, url) => const Image(
+                                    image: AssetImage('images/cover.jpg'),
+                                    fit: BoxFit.contain,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Image(
+                                          image:
+                                              AssetImage('images/cover.jpg')),
+                                ),
+                                Text(model?.name ?? "Loading..."),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
+            ],
+          )),
     );
   }
 }

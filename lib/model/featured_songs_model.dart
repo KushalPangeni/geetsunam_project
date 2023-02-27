@@ -1,42 +1,35 @@
 // To parse this JSON data, do
 //
-//     final genre = genreFromJson(jsonString);
+//     final featuredSong = featuredSongFromJson(jsonString);
 
 import 'dart:convert';
 
-Genre genreFromJson(String str) => Genre.fromJson(json.decode(str));
+FeaturedSong featuredSongFromJson(String str) =>
+    FeaturedSong.fromJson(json.decode(str));
 
-String genreToJson(Genre data) => json.encode(data.toJson());
+String featuredSongToJson(FeaturedSong data) => json.encode(data.toJson());
 
-class Genre {
-  Genre({
-    required this.status,
-    required this.results,
-    required this.currentPage,
-    required this.totalPage,
-    required this.data,
+class FeaturedSong {
+  FeaturedSong({
+    this.status,
+    this.results,
+    this.data,
   });
 
-  String status;
-  int results;
-  int currentPage;
-  int totalPage;
-  Data data;
+  String? status;
+  int? results;
+  Data? data;
 
-  factory Genre.fromJson(Map<String, dynamic> json) => Genre(
+  factory FeaturedSong.fromJson(Map<String, dynamic> json) => FeaturedSong(
         status: json["status"],
         results: json["results"],
-        currentPage: json["currentPage"],
-        totalPage: json["totalPage"],
         data: Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "results": results,
-        "currentPage": currentPage,
-        "totalPage": totalPage,
-        "data": data.toJson(),
+        "data": data?.toJson(),
       };
 }
 
@@ -58,32 +51,32 @@ class Data {
 
 class Song {
   Song({
-    required this.id,
-    required this.title,
-    required this.coverArt,
-    required this.artists,
-    required this.source,
-    required this.genre,
-    required this.duration,
-    required this.releasedDate,
-    required this.uploadedDate,
-    required this.isFeatured,
-    required this.stream,
-    required this.isFavourite,
+    this.id,
+    this.title,
+    this.coverArt,
+    this.artists,
+    this.source,
+    this.genre,
+    this.duration,
+    this.releasedDate,
+    this.uploadedDate,
+    this.isFeatured,
+    this.stream,
+    this.isFavourite,
   });
 
-  String id;
-  String title;
-  String coverArt;
-  Artists artists;
-  String source;
-  GenreClass genre;
-  String duration;
-  DateTime releasedDate;
-  DateTime uploadedDate;
-  bool isFeatured;
-  String stream;
-  bool isFavourite;
+  String? id;
+  String? title;
+  String? coverArt;
+  Artists? artists;
+  String? source;
+  Genre? genre;
+  String? duration;
+  DateTime? releasedDate;
+  DateTime? uploadedDate;
+  bool? isFeatured;
+  String? stream;
+  bool? isFavourite;
 
   factory Song.fromJson(Map<String, dynamic> json) => Song(
         id: json["_id"],
@@ -91,7 +84,7 @@ class Song {
         coverArt: json["coverArt"],
         artists: Artists.fromJson(json["artists"]),
         source: json["source"],
-        genre: GenreClass.fromJson(json["genre"]),
+        genre: Genre.fromJson(json["genre"]),
         duration: json["duration"],
         releasedDate: DateTime.parse(json["releasedDate"]),
         uploadedDate: DateTime.parse(json["uploadedDate"]),
@@ -104,13 +97,13 @@ class Song {
         "_id": id,
         "title": title,
         "coverArt": coverArt,
-        "artists": artists.toJson(),
+        "artists": artists?.toJson(),
         "source": source,
-        "genre": genre.toJson(),
+        "genre": genre?.toJson(),
         "duration": duration,
         "releasedDate":
-            "${releasedDate.year.toString().padLeft(4, '0')}-${releasedDate.month.toString().padLeft(2, '0')}-${releasedDate.day.toString().padLeft(2, '0')}",
-        "uploadedDate": uploadedDate.toIso8601String(),
+            "${releasedDate?.year.toString().padLeft(4, '0')}-${releasedDate?.month.toString().padLeft(2, '0')}-${releasedDate?.day.toString().padLeft(2, '0')}",
+        "uploadedDate": uploadedDate?.toIso8601String(),
         "isFeatured": isFeatured,
         "stream": stream,
         "isFavourite": isFavourite,
@@ -149,8 +142,8 @@ class Artists {
       };
 }
 
-class GenreClass {
-  GenreClass({
+class Genre {
+  Genre({
     required this.id,
     required this.name,
     required this.image,
@@ -160,7 +153,7 @@ class GenreClass {
   String name;
   String image;
 
-  factory GenreClass.fromJson(Map<String, dynamic> json) => GenreClass(
+  factory Genre.fromJson(Map<String, dynamic> json) => Genre(
         id: json["_id"],
         name: json["name"],
         image: json["image"],

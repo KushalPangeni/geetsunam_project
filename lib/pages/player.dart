@@ -10,9 +10,13 @@ import 'package:geetsunam/model/position_data.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../model/featured_songs_model.dart';
+
 class Player extends StatefulWidget {
-  final List songslist;
-  const Player({super.key, required this.songslist});
+  final Song? songsindex;
+  final Map? songMapData;
+
+  const Player({super.key, this.songsindex, this.songMapData});
 
   @override
   State<Player> createState() => _PlayerState();
@@ -20,7 +24,6 @@ class Player extends StatefulWidget {
 
 class _PlayerState extends State<Player> {
   final PlayerSeparate playerSeparate = GetIt.instance.get<PlayerSeparate>();
-  late int songsnumber;
 
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
@@ -80,8 +83,8 @@ class _PlayerState extends State<Player> {
                           borderRadius: BorderRadius.circular(10)),
                       child: CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: musiclist[songsnumber]['trackDetails']
-                            ['coverArt'],
+                        imageUrl: widget.songsindex?.coverArt ??
+                            widget.songMapData?["coverArt"],
                         placeholder: (context, url) => const Image(
                           image: AssetImage('images/cover.jpg'),
                           fit: BoxFit.fill,
@@ -89,13 +92,6 @@ class _PlayerState extends State<Player> {
                         errorWidget: (context, url, error) =>
                             const Image(image: AssetImage('images/cover.jpg')),
                       ),
-                      // Image(
-                      //   // image: AssetImage('images/Pop.jpg'),
-                      //   image: NetworkImage(
-                      //       musiclist[songsnumber]['trackDetails']['coverArt']),
-                      //   // fit: BoxFit.cover,
-                      //   fit: BoxFit.fill,
-                      // ),
                     ),
                     //Song name and artist name
                     Padding(
@@ -103,13 +99,16 @@ class _PlayerState extends State<Player> {
                       child: Column(
                         children: [
                           Text(
-                            "title",
+                            widget.songsindex?.title ??
+                                widget.songMapData?["title"],
+                            textAlign: TextAlign.center,
                             maxLines: 1,
                             style: const TextStyle(
                                 fontSize: 40, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            "Name",
+                            widget.songsindex?.artists?.fullname ??
+                                widget.songMapData?["artists"]["fullname"],
                             maxLines: 1,
                             style: const TextStyle(
                               fontSize: 20,

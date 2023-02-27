@@ -10,14 +10,14 @@ String genreToJson(Genre data) => json.encode(data.toJson());
 
 class Genre {
   Genre({
-    required this.status,
-    required this.results,
-    required this.data,
+    this.status,
+    this.results,
+    this.data,
   });
 
-  String status;
-  int results;
-  Data data;
+  String? status;
+  int? results;
+  Data? data;
 
   factory Genre.fromJson(Map<String, dynamic> json) => Genre(
         status: json["status"],
@@ -28,7 +28,7 @@ class Genre {
   Map<String, dynamic> toJson() => {
         "status": status,
         "results": results,
-        "data": data.toJson(),
+        "data": data?.toJson(),
       };
 }
 

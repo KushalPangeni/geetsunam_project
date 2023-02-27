@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:geetsunam/pages/drawer.dart';
+import 'package:geetsunam/pages/featuredsong.dart';
 import 'package:geetsunam/pages/genrepage.dart';
-import 'package:geetsunam/pages/listofsongs.dart';
+import 'package:provider/provider.dart';
+
+import 'controller/fetch_provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -13,7 +17,17 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   @override
+  void initState() {
+    super.initState();
+    final fetchProvider = Provider.of<FetchData>(context, listen: false);
+    fetchProvider.getGenres('/genre');
+    fetchProvider.getFeaturedSongs('/songs/featured');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // final fetchProvider = Provider.of<FetchData>(context, listen: false);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -21,41 +35,13 @@ class _HomepageState extends State<Homepage> {
           backgroundColor: Colors.black,
         ),
         drawer: Drawer(
-          child: Container(
-            decoration: BoxDecoration(color: Colors.white),
-            child: Column(
-              children: [
-                ListTile(
-                  onTap: () {},
-                  title: Text(
-                    "Homepage",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-                ListTile(
-                  onTap: () {},
-                  title: Text(
-                    "Artists",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-                ListTile(
-                  onTap: () {},
-                  title: Text(
-                    "Logout",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          child: DrawerContainer(),
         ),
         body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
-          children: [
-            GenrePage(),
-          ],
-        )),
+              children: [GenrePage(), FeaturedSongs()],
+            )),
       ),
     );
   }
