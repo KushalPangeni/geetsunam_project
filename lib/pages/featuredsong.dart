@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:geetsunam/controller/fetch_provider.dart';
-import 'package:geetsunam/model/player_separate.dart';
+import 'package:geetsunam/controller/player_separate.dart';
 import 'package:geetsunam/pages/player.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +17,7 @@ class FeaturedSongs extends StatefulWidget {
 }
 
 class _FeaturedSongsState extends State<FeaturedSongs> {
-  PlayerSeparate playerSeparate = GetIt.instance.get<PlayerSeparate>();
+  PlayerProvider playerSeparate = GetIt.instance.get<PlayerProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,19 +63,20 @@ class _FeaturedSongsState extends State<FeaturedSongs> {
 
   Widget featured(int index, Song songsData) {
     var feature = Provider.of<FetchData>(context, listen: false);
+    var playProvider = Provider.of<PlayerProvider>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          log("${feature.featuredSong.data?.songs[0].toString()} ?? " " " 'wt');
+          // log("${feature.featuredSong.data?.songs[0].toString()} ?? " " " 'wt');
+          playProvider
+              .setsongs(feature.featuredSong.data?.songs[index] ?? Song());
           playerSeparate
               .open(feature.featuredSong.data?.songs[index].source ?? " ");
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: ((context) => Player(
-                    songsindex: songsData,
-                  )),
+              builder: ((context) => const Player()),
             ),
           );
         },

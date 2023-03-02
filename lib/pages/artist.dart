@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geetsunam/controller/fetch_provider.dart';
+import 'package:geetsunam/pages/controller.dart';
 import 'package:provider/provider.dart';
 
 class ArtistPage extends StatefulWidget {
@@ -60,27 +61,36 @@ class _ArtistPageState extends State<ArtistPage> {
                   child: Visibility(
                     visible: value.isArtistLoaded,
                     replacement: Center(child: CircularProgressIndicator()),
-                    child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: value.artist.results,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisExtent: 120,
-                          mainAxisSpacing: 5,
-                          crossAxisSpacing: 5,
-                          crossAxisCount: 3),
-                      itemBuilder: ((context, index) {
-                        log(value.artist.results.toString());
-                        var artistModel = value.artist.data?.artists[index];
-                        // return ListView.builder(
-                        //   primary: false,
-                        //   itemCount: value.artist.results,
-                        //   itemBuilder: ((context, index2) {
-                        //     var artistModel = model.data?.artists[index2];
-                        return artistCard(artistModel?.profileImage ?? "",
-                            artistModel?.fullname ?? "");
-                      }),
-                      // );
-                      // }),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: value.artist.results,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    mainAxisExtent: 120,
+                                    mainAxisSpacing: 5,
+                                    crossAxisSpacing: 5,
+                                    crossAxisCount: 3),
+                            itemBuilder: ((context, index) {
+                              log(value.artist.results.toString());
+                              var artistModel =
+                                  value.artist.data?.artists[index];
+                              // return ListView.builder(
+                              //   primary: false,
+                              //   itemCount: value.artist.results,
+                              //   itemBuilder: ((context, index2) {
+                              //     var artistModel = model.data?.artists[index2];
+                              return artistCard(artistModel?.profileImage ?? "",
+                                  artistModel?.fullname ?? "");
+                            }),
+                            // );
+                            // }),
+                          ),
+                        ),
+                        Controller()
+                      ],
                     ),
                   ),
                 )));

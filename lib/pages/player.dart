@@ -3,24 +3,26 @@ import 'dart:developer';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:geetsunam/model/player_separate.dart';
+import 'package:geetsunam/controller/player_separate.dart';
 import 'package:geetsunam/model/position_data.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../model/featured_songs_model.dart';
-
 class Player extends StatefulWidget {
-  final Song? songsindex;
+  // final Song? songsindex;
 
-  const Player({super.key, this.songsindex});
+  const Player({
+    super.key,
+    // this.songsindex
+  });
 
   @override
   State<Player> createState() => _PlayerState();
 }
 
 class _PlayerState extends State<Player> {
-  final PlayerSeparate playerSeparate = GetIt.instance.get<PlayerSeparate>();
+  final PlayerProvider playerSeparate = GetIt.instance.get<PlayerProvider>();
 
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
@@ -64,105 +66,110 @@ class _PlayerState extends State<Player> {
             builder: (context, snapshot) {
               final positionData = snapshot.data;
               return Padding(
-                padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 300,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.songsindex?.coverArt ?? "",
-                        placeholder: (context, url) => const Image(
-                          image: AssetImage('images/cover.jpg'),
-                          fit: BoxFit.fill,
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Image(image: AssetImage('images/cover.jpg')),
-                      ),
-                    ),
-                    //Song name and artist name
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 30, 10, 15),
-                      child: Column(
+                  padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+                  child: Consumer<PlayerProvider>(
+                    builder: (context, value, child) {
+                      return Column(
                         children: [
-                          Text(
-                            widget.songsindex?.title ?? "",
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            style: const TextStyle(
-                                fontSize: 40, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            widget.songsindex?.artists?.fullname ?? "",
-                            maxLines: 1,
-                            style: const TextStyle(
-                              fontSize: 20,
+                          Container(
+                            height: 300,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              imageUrl: value.songs?.coverArt ?? " ",
+                              placeholder: (context, url) => const Image(
+                                image: AssetImage('images/cover.jpg'),
+                                fit: BoxFit.fill,
+                              ),
+                              errorWidget: (context, url, error) => const Image(
+                                  image: AssetImage('images/cover.jpg')),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    //ProgressBar
-                    ProgressBar(
-                      progress: positionData?.position ?? Duration.zero,
-                      buffered: positionData?.bufferedPosition ?? Duration.zero,
-                      total: positionData?.duration ?? Duration.zero,
-                      onSeek: playerSeparate.player.seek,
-                    ),
+                          //Song name and artist name
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 30, 10, 15),
+                            child: Column(
+                              children: [
+                                Text(
+                                  value.songs?.title ?? " ",
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  value.songs?.artists?.fullname ?? "",
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          //ProgressBar
+                          ProgressBar(
+                            progress: positionData?.position ?? Duration.zero,
+                            buffered:
+                                positionData?.bufferedPosition ?? Duration.zero,
+                            total: positionData?.duration ?? Duration.zero,
+                            onSeek: playerSeparate.player.seek,
+                          ),
 
-                    //Icons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.shuffle),
-                          iconSize: 40,
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.skip_previous),
-                              iconSize: 40,
-                            ),
-                            IconButton(
-                              iconSize: 55,
-                              icon: playerSeparate.player.playing
-                                  ? const Icon(Icons.pause)
-                                  : const Icon(Icons.play_arrow),
-                              onPressed: () {
-                                setState(() {
-                                  if (playerSeparate.player.playing) {
-                                    playerSeparate.player.pause();
-                                  } else {
-                                    playerSeparate.player.play();
-                                  }
-                                });
-                              },
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                playerSeparate.player.seekToNext();
-                              },
-                              icon: const Icon(Icons.skip_next),
-                              iconSize: 40,
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.repeat),
-                          iconSize: 40,
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              );
+                          //Icons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.shuffle),
+                                iconSize: 40,
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.skip_previous),
+                                    iconSize: 40,
+                                  ),
+                                  IconButton(
+                                    iconSize: 55,
+                                    icon: playerSeparate.player.playing
+                                        ? const Icon(Icons.pause)
+                                        : const Icon(Icons.play_arrow),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (playerSeparate.player.playing) {
+                                          playerSeparate.player.pause();
+                                        } else {
+                                          playerSeparate.player.play();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      playerSeparate.player.seekToNext();
+                                    },
+                                    icon: const Icon(Icons.skip_next),
+                                    iconSize: 40,
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.repeat),
+                                iconSize: 40,
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    },
+                  ));
             }),
       ),
     );

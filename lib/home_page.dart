@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:geetsunam/pages/controller.dart';
 import 'package:geetsunam/pages/drawer.dart';
 import 'package:geetsunam/pages/featuredsong.dart';
 import 'package:geetsunam/pages/genrepage.dart';
@@ -19,8 +20,6 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
-    // final fetchProvider = Provider.of<FetchData>(context, listen: false);
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -38,16 +37,21 @@ class _HomepageState extends State<Homepage> {
             fetchProvider.getFeaturedSongs('/songs/featured');
             fetchProvider.getNewReleasedSongs('/song/new-releases');
           },
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
+          child: Column(
             children: [
-              FeaturedSongs(),
-              GenrePage(),
-              FeaturedSongs(),
-              GenrePage(),
-              NewReleases(),
-              GenrePage(),
-              NewReleases(),
+              Expanded(
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    FeaturedSongs(),
+                    GenrePage(),
+                    FeaturedSongs(),
+                    GenrePage(),
+                    NewReleases(),
+                  ],
+                ),
+              ),
+              Controller()
             ],
           ),
         ),
