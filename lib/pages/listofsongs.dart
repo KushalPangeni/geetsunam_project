@@ -19,15 +19,6 @@ class Listofsongs extends StatefulWidget {
 
 class _ListofsongsState extends State<Listofsongs> {
   PlayerSeparate playerSeparate = GetIt.instance.get<PlayerSeparate>();
-  // bool isLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    final fetchProvider = Provider.of<FetchData>(context, listen: false);
-    fetchProvider.getSongs('/songs?page=1');
-  }
-
   @override
   Widget build(BuildContext context) {
     // final fetchProvider = Provider.of<FetchData>(context, listen: false);
@@ -40,35 +31,42 @@ class _ListofsongsState extends State<Listofsongs> {
           title: const Text("Songs"),
         ),
         body: Consumer<FetchData>(
-          builder: (context, value, child) => Visibility(
-            visible: value.isSongsLoaded,
-            replacement: const Center(child: CircularProgressIndicator()),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: NotificationListener<ScrollUpdateNotification>(
-                // onNotification: (){},
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: value.songs?.length,
-                  itemBuilder: ((context, index) => ListTile(
-                        onTap: () {
-                          playerSeparate
-                              .open(value.songs?[index]["source"] ?? "");
-                          log(value.songs?[index].toString() ?? 'error ');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: ((context) => Player(
-                                    songMapData: value.songs?[index],
-                                  )),
-                            ),
-                          );
-                        },
-                        title: Text(value.songs?[index]['title']),
-                        subtitle:
-                            Text(value.songs?[index]['artists']['fullname']),
-                        trailing: Text(value.songs?[index]['duration']),
-                      )),
+          builder: (context, value, child) => RefreshIndicator(
+            onRefresh: () async {
+              final fetchProvider =
+                  Provider.of<FetchData>(context, listen: false);
+              fetchProvider.getSongs('/songs?page=1');
+            },
+            child: Visibility(
+              visible: value.isSongsLoaded,
+              replacement: const Center(child: CircularProgressIndicator()),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: NotificationListener<ScrollUpdateNotification>(
+                  // onNotification: (){},
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: value.songs?.length,
+                    itemBuilder: ((context, index) => ListTile(
+                          onTap: () {
+                            playerSeparate
+                                .open(value.songs?[index].source ?? "");
+                            log(value.songs?[index].toString() ?? 'error ');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: ((context) => Player(
+                                      songsindex: value.songs?[index],
+                                    )),
+                              ),
+                            );
+                          },
+                          title: Text(value.songs?[index].title ?? ""),
+                          subtitle:
+                              Text(value.songs?[index].artists?.fullname ?? ""),
+                          trailing: Text(value.songs?[index].duration ?? " "),
+                        )),
+                  ),
                 ),
               ),
             ),
@@ -76,5 +74,14 @@ class _ListofsongsState extends State<Listofsongs> {
         ),
       ),
     );
+  }
+
+  // bool isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final fetchProvider = Provider.of<FetchData>(context, listen: false);
+    fetchProvider.getSongs('/songs?page=1');
   }
 }

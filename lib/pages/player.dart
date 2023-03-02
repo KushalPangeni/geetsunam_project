@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:developer';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -14,9 +12,8 @@ import '../model/featured_songs_model.dart';
 
 class Player extends StatefulWidget {
   final Song? songsindex;
-  final Map? songMapData;
 
-  const Player({super.key, this.songsindex, this.songMapData});
+  const Player({super.key, this.songsindex});
 
   @override
   State<Player> createState() => _PlayerState();
@@ -32,12 +29,6 @@ class _PlayerState extends State<Player> {
           playerSeparate.player.durationStream,
           (position, bufferedPosition, duration) => PositionData(
               position, bufferedPosition, duration ?? Duration.zero));
-  @override
-  void initState() {
-    super.initState();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -83,8 +74,7 @@ class _PlayerState extends State<Player> {
                           borderRadius: BorderRadius.circular(10)),
                       child: CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: widget.songsindex?.coverArt ??
-                            widget.songMapData?["coverArt"],
+                        imageUrl: widget.songsindex?.coverArt ?? "",
                         placeholder: (context, url) => const Image(
                           image: AssetImage('images/cover.jpg'),
                           fit: BoxFit.fill,
@@ -99,16 +89,14 @@ class _PlayerState extends State<Player> {
                       child: Column(
                         children: [
                           Text(
-                            widget.songsindex?.title ??
-                                widget.songMapData?["title"],
+                            widget.songsindex?.title ?? "",
                             textAlign: TextAlign.center,
                             maxLines: 1,
                             style: const TextStyle(
                                 fontSize: 40, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            widget.songsindex?.artists?.fullname ??
-                                widget.songMapData?["artists"]["fullname"],
+                            widget.songsindex?.artists?.fullname ?? "",
                             maxLines: 1,
                             style: const TextStyle(
                               fontSize: 20,
@@ -124,30 +112,7 @@ class _PlayerState extends State<Player> {
                       total: positionData?.duration ?? Duration.zero,
                       onSeek: playerSeparate.player.seek,
                     ),
-                    // Slider(
-                    //   min: 0,
-                    //   max: playerSeparate.player.duration == null
-                    //       ? 0
-                    //       : playerSeparate.player.duration!.inSeconds.toDouble(),
-                    //   value: 0.2,
-                    //   onChanged: ((value) {
-                    //     setState(() {
-                    //       log('value');
-                    //     });
-                    //   }),
-                    // ),
-                    //Time for player
-                    // Padding(
-                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: const [
-                    //       Text("00:00"),
-                    //       Text("04:52"),
-                    //       // Text(playerSeparate.durationn),
-                    //     ],
-                    //   ),
-                    // ),
+
                     //Icons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,11 +139,9 @@ class _PlayerState extends State<Player> {
                                   if (playerSeparate.player.playing) {
                                     playerSeparate.player.pause();
                                   } else {
-                                    // playerSeparate.player.open();
                                     playerSeparate.player.play();
                                   }
                                 });
-                                // playerSeparate.playy();
                               },
                             ),
                             IconButton(
@@ -203,5 +166,11 @@ class _PlayerState extends State<Player> {
             }),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {});
   }
 }

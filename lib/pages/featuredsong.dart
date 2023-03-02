@@ -25,22 +25,22 @@ class _FeaturedSongsState extends State<FeaturedSongs> {
   Widget build(BuildContext context) {
     var featuredSongsmodel = Provider.of<FetchData>(context, listen: false);
     return Consumer<FetchData>(
-      builder: (context, value, child) => Visibility(
-        visible: value.isFeaturedSongsLoaded,
-        replacement: const Center(child: CircularProgressIndicator()),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Featured Songs",
-                style: TextStyle(fontSize: 24),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              CarouselSlider.builder(
+      builder: (context, value, child) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Featured Songs",
+              style: TextStyle(fontSize: 24),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Visibility(
+              visible: value.isFeaturedSongsLoaded,
+              replacement: const Center(child: CircularProgressIndicator()),
+              child: CarouselSlider.builder(
                 options: CarouselOptions(
                   viewportFraction: 1.12,
                   autoPlay: true,
@@ -56,8 +56,8 @@ class _FeaturedSongsState extends State<FeaturedSongs> {
                   );
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
