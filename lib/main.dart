@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geetsunam/controller/fetch_provider.dart';
 import 'package:geetsunam/controller/player_separate.dart';
-import 'package:geetsunam/home_page.dart';
+import 'package:geetsunam/pages/login.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         )
       ],
       child: const MaterialApp(
-        home: Homepage(),
+        home: Login(),
       ),
     );
   }

@@ -34,21 +34,24 @@ class _HomepageState extends State<Homepage> {
             final fetchProvider =
                 Provider.of<FetchData>(context, listen: false);
             fetchProvider.getGenres('/genre');
-            fetchProvider.getFeaturedSongs('/songs/featured');
+            // fetchProvider.getFeaturedSongs('/songs/featured');
             fetchProvider.getNewReleasedSongs('/song/new-releases');
           },
           child: Column(
             children: [
-              Expanded(
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children: [
-                    FeaturedSongs(),
-                    GenrePage(),
-                    FeaturedSongs(),
-                    GenrePage(),
-                    NewReleases(),
-                  ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 150,
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      // FeaturedSongs(),
+                      GenrePage(),
+                      FeaturedSongs(),
+                      NewReleases(),
+                      GenrePage(),
+                    ],
+                  ),
                 ),
               ),
               Controller()
@@ -64,7 +67,7 @@ class _HomepageState extends State<Homepage> {
     super.initState();
     final fetchProvider = Provider.of<FetchData>(context, listen: false);
     fetchProvider.getGenres('/genre');
-    // fetchProvider.getFeaturedSongs('/songs/featured');
+    fetchProvider.getFeaturedSongs('/songs/featured');
     fetchProvider.getNewReleasedSongs('/song/new-releases');
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geetsunam/controller/fetch_provider.dart';
 import 'package:geetsunam/controller/player_separate.dart';
 import 'package:geetsunam/pages/player.dart';
+import 'package:geetsunam/widgets/all_shimmer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,8 @@ class _FeaturedSongsState extends State<FeaturedSongs> {
             ),
             Visibility(
               visible: value.isFeaturedSongsLoaded,
-              replacement: const Center(child: CircularProgressIndicator()),
+              replacement:
+                  SizedBox(height: 180, child: AllShimmer.featuredShimmer()),
               child: CarouselSlider.builder(
                 options: CarouselOptions(
                   viewportFraction: 1.12,
@@ -94,8 +96,13 @@ class _FeaturedSongsState extends State<FeaturedSongs> {
               image: AssetImage('images/cover.jpg'),
               fit: BoxFit.contain,
             ),
-            errorWidget: (context, url, error) =>
-                const Image(image: AssetImage('images/cover.jpg')),
+            errorWidget: (context, url, error) => ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) => const Image(
+                image: AssetImage('images/cover.jpg'),
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
         ),
       ),

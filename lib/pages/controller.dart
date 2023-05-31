@@ -32,11 +32,14 @@ class _ControllerState extends State<Controller> {
           padding: const EdgeInsets.fromLTRB(0, 2, 5, 2),
           child: Row(
             children: [
+              const SizedBox(
+                width: 5,
+              ),
               //Image container
               Container(
                 height: 60,
                 width: 90,
-                clipBehavior: Clip.antiAlias,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(16)),
                 child: CachedNetworkImage(
@@ -46,8 +49,10 @@ class _ControllerState extends State<Controller> {
                     image: AssetImage('images/cover.jpg'),
                     fit: BoxFit.fill,
                   ),
-                  errorWidget: (context, url, error) =>
-                      const Image(image: AssetImage('images/cover.jpg')),
+                  errorWidget: (context, url, error) => const Image(
+                    image: AssetImage('images/cover.jpg'),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               //Song name and singer name

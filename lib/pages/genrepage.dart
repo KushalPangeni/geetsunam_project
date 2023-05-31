@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:geetsunam/widgets/all_shimmer.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/fetch_provider.dart';
@@ -16,11 +17,6 @@ class GenrePage extends StatefulWidget {
 }
 
 class _GenrePageState extends State<GenrePage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     // final fetchProvider = Provider.of<FetchData>(context, listen: false);
@@ -40,7 +36,8 @@ class _GenrePageState extends State<GenrePage> {
               ),
               Visibility(
                 visible: value.isGenresLoaded,
-                replacement: Center(child: CircularProgressIndicator()),
+                replacement:
+                    SizedBox(height: 100, child: AllShimmer.genreShimmer()),
                 child: SizedBox(
                   height: 100,
                   child: ListView.builder(
@@ -80,5 +77,10 @@ class _GenrePageState extends State<GenrePage> {
             ],
           )),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 }

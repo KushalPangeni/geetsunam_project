@@ -21,7 +21,7 @@ class FetchData with ChangeNotifier {
   var newRelease = FeaturedSong();
   var artist = Artist();
   var genre = genre_data_model.Genre();
-  String baseUrl = 'https://geetsunam.onrender.com/api';
+  // String token = "token";
 
   void getArtists(String api) async {
     var client = http.Client();
@@ -51,6 +51,7 @@ class FetchData with ChangeNotifier {
         await client.get(uri, headers: {'Authorization': 'Bearer $token'});
     if (response.statusCode != 200) return null;
     var decodedJson = genre_data_model.genreFromJson(response.body);
+    log(decodedJson.toString());
     genre = decodedJson;
     isGenresLoaded = true;
     notifyListeners();
@@ -74,8 +75,14 @@ class FetchData with ChangeNotifier {
     var uri = Uri.parse(baseUrl + api);
     var response =
         await client.get(uri, headers: {'Authorization': 'Bearer $token'});
+    log("getsongs");
+    log(response.statusCode.toString());
+    if (response.statusCode != 200) return null;
+    log(response.body.toString());
     var res = featuredSongFromJson(response.body);
     songs = res.data?.songs;
+    log(songs.toString());
+    log("yeha samma aaxa");
     if (songs != null) {
       isSongsLoaded = true;
     }

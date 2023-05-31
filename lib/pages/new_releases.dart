@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geetsunam/widgets/all_shimmer.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/fetch_provider.dart';
@@ -29,7 +30,10 @@ class _NewReleasesState extends State<NewReleases> {
               ),
               Visibility(
                 visible: value.isGenresLoaded,
-                replacement: const Center(child: CircularProgressIndicator()),
+                replacement: SizedBox(
+                  height: 180,
+                  child: AllShimmer.newReleasesShimmer(),
+                ),
                 child: SizedBox(
                   height: 100,
                   child: ListView.builder(
