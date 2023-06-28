@@ -2,10 +2,9 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geetsunam/controller/fetch_genre_by_id.dart';
 import 'package:geetsunam/widgets/all_shimmer.dart';
 import 'package:provider/provider.dart';
-
-import '../controller/fetch_provider.dart';
 
 class GenrePage extends StatefulWidget {
   const GenrePage({
@@ -19,9 +18,7 @@ class GenrePage extends StatefulWidget {
 class _GenrePageState extends State<GenrePage> {
   @override
   Widget build(BuildContext context) {
-    // final fetchProvider = Provider.of<FetchData>(context, listen: false);
-    // log(fetchProvider.genres.toString());
-    return Consumer<FetchData>(
+    return Consumer<FetchGenreById>(
       builder: (context, value, child) => Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

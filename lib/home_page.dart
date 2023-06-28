@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:geetsunam/controller/fetch_genre_by_id.dart';
 import 'package:geetsunam/pages/controller.dart';
 import 'package:geetsunam/pages/drawer.dart';
 import 'package:geetsunam/pages/featuredsong.dart';
@@ -33,7 +34,9 @@ class _HomepageState extends State<Homepage> {
           onRefresh: () async {
             final fetchProvider =
                 Provider.of<FetchData>(context, listen: false);
-            fetchProvider.getGenres('/genre');
+            final fetchProviderById =
+                Provider.of<FetchGenreById>(context, listen: false);
+            fetchProviderById.getGenres('/genre');
             // fetchProvider.getFeaturedSongs('/songs/featured');
             fetchProvider.getNewReleasedSongs('/song/new-releases');
           },
@@ -66,7 +69,9 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     final fetchProvider = Provider.of<FetchData>(context, listen: false);
-    fetchProvider.getGenres('/genre');
+    final fetchProviderById =
+        Provider.of<FetchGenreById>(context, listen: false);
+    fetchProviderById.getGenres('/genre');
     fetchProvider.getFeaturedSongs('/songs/featured');
     fetchProvider.getNewReleasedSongs('/song/new-releases');
   }

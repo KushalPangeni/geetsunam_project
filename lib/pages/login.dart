@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:geetsunam/controller/fetch_provider.dart';
 import 'package:geetsunam/home_page.dart';
 import 'package:geetsunam/pages/reusable.dart';
 import 'package:geetsunam/pages/signup.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -21,6 +21,7 @@ class _LoginState extends State<Login> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   late SharedPreferences pref;
+  FetchData fetchlogin = FetchData();
 
   @override
   Widget build(BuildContext context) {
@@ -97,40 +98,41 @@ class _LoginState extends State<Login> {
                   height: 10,
                 ),
                 //Login Button
-                InkWell(
-                  onTap: (() async {
-                    log("Login");
-                    // var object = [{"email":email.text}];
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => Homepage())));
-                    var response = await http.post(
-                        Uri.parse("http://192.168.0.4:5000/api/users/login"),
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: jsonEncode(
-                            {"email": email.text, "password": password.text}));
-                    log(jsonDecode(response.body).toString());
-                  }),
-                  child: Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 50, 58, 58),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500),
+                Consumer<FetchData>(builder: (context, _, child) {
+                  return InkWell(
+                    onTap: (() async {
+                      log("Login");
+                      fetchlogin.login(email.value.text, password.value.text);
+                      _.setTokenValue();
+                      if (_.token != null) {
+                        setState(() {});
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((context) => Homepage()),
+                          ),
+                        );
+                      }
+                    }),
+                    child: Container(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 50, 58, 58),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-
+                  );
+                }),
                 SizedBox(
                   height: 50,
                 ),

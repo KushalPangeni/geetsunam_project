@@ -15,7 +15,7 @@ class ArtistPage extends StatefulWidget {
 }
 
 class _ArtistPageState extends State<ArtistPage> {
-  Widget artistCard(String imagePath, String name) {
+  Widget artistCard(String? imagePath, String name) {
     return Card(
       child: SizedBox(
         height: 100,
@@ -28,7 +28,9 @@ class _ArtistPageState extends State<ArtistPage> {
               // width: 200,
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(12)),
-              child: Image(image: NetworkImage(imagePath), fit: BoxFit.contain),
+              child: imagePath == null
+                  ? SizedBox()
+                  : Image(image: NetworkImage(imagePath), fit: BoxFit.contain),
             ),
             SizedBox(
               // height: 14,
@@ -77,11 +79,6 @@ class _ArtistPageState extends State<ArtistPage> {
                               log(value.artist.results.toString());
                               var artistModel =
                                   value.artist.data?.artists[index];
-                              // return ListView.builder(
-                              //   primary: false,
-                              //   itemCount: value.artist.results,
-                              //   itemBuilder: ((context, index2) {
-                              //     var artistModel = model.data?.artists[index2];
                               return artistCard(artistModel?.profileImage ?? "",
                                   artistModel?.fullname ?? "");
                             }),

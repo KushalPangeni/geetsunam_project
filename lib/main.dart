@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geetsunam/controller/fetch_genre_by_id.dart';
 import 'package:geetsunam/controller/fetch_provider.dart';
 import 'package:geetsunam/controller/player_separate.dart';
 import 'package:geetsunam/pages/login.dart';
@@ -29,6 +30,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => PlayerProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FetchGenreById(),
         )
       ],
       child: const MaterialApp(

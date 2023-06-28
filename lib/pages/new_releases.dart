@@ -29,7 +29,7 @@ class _NewReleasesState extends State<NewReleases> {
                 height: 15,
               ),
               Visibility(
-                visible: value.isGenresLoaded,
+                visible: value.isNewReleased,
                 replacement: SizedBox(
                   height: 180,
                   child: AllShimmer.newReleasesShimmer(),

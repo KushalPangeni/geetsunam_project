@@ -3,10 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:geetsunam/pages/artist.dart';
 import 'package:geetsunam/pages/listofsongs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class DrawerContainer extends StatelessWidget {
+class DrawerContainer extends StatefulWidget {
   const DrawerContainer({super.key});
 
+  @override
+  State<DrawerContainer> createState() => _DrawerContainerState();
+}
+
+class _DrawerContainerState extends State<DrawerContainer> {
+  late SharedPreferences preferences;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,7 +68,11 @@ class DrawerContainer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text("Logout"),
-            onTap: () {},
+            onTap: () async {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              await preferences.remove('token');
+            },
           )
         ],
       ),
